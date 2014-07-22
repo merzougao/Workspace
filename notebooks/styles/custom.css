@@ -30,12 +30,13 @@
 
 	#notebook li { /* More space between bullet points */
 		margin-top:10px;
+		margin-bottom:10px;
 	}
 
     div.text_cell_render{
         font-family: Computer Modern, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
         line-height: 100%;
-        font-size: 130%;
+        font-size: 120%;
         width:800px;
         margin-left:auto;
         margin-right:auto;
