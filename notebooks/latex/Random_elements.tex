@@ -1,0 +1,52 @@
+
+\section{Random Elements}
+
+\subsection{Definitions}
+
+$(\Omega, \mathcal{F}, P)$ is a $\textbf{Probability space}$
+
+\noindent A $\textbf{Random variable}$ is a measurable function $X : \Omega \rightarrow \mathbb{R}$
+
+\noindent A $\textbf{Random element}$ is a measurable transformation $X : \Omega \rightarrow Y$ with $(Y, \mathcal{S})$ measurable space.
+
+\noindent The $\textbf{Distribution}$ of X is the induced measure:
+
+\begin{align*}
+P_X : \sigma(Y) &\longmapsto [0,1] \\
+    B &\longmapsto P\{\omega: X(\omega) \in B\} \quad &\text{(written also $P\{X \in B\}$)} \\
+B &\longmapsto P\{\omega \in X^{-1}(B)\} &\text{(written also $PX^{-1}(B)$)}
+\end{align*}
+
+\noindent The $\textbf{Distribution function}$ of X is defined as: 
+
+\begin{align*}
+    F:\mathbb{R} &\longmapsto \mathbb{R} \\
+x &\longmapsto P_X(-\infty, x)
+\end{align*}
+
+\noindent The $\textbf{Expectation}$ of a random variable $X$ is $E(X) = \displaystyle\int_{\Omega} X(\omega)dP(\omega)$
+
+
+\subsection{Sum of two Random variables}
+Let $X,Y$ be two random variables. Let $\phi(x_1,x_2) = x_1 + x_2$. We have the distribution:
+
+\begin{align*}
+P\{\omega: X(\omega)+Y(\omega) \in B\} &= P\{X+Y \in B\} \\
+&= P\{\phi(X,Y) \in B\} \\
+&= P\{(X+Y) \in \phi^{-1}B\} \\
+&= \int \mathbbm{1}_{\phi^{-1}B}(x,y)\;dP(X^{-1}\times Y^{-1}) \\
+&= \iint \mathbbm{1}_{\phi^{-1}B}(x,y)\;dPX^{-1}\; dPY^{-1} \\
+&= \int PX^{-1}(B-y) dPY^{-1} = \int PY^{-1}(B-x) dPX^{-1} \\
+&= \int P_X(B-y) dP_Y = \int P_Y(B-x) dP_X \\
+&= \int_{-\infty}^{\infty} P_X(B-y) dP_Y(y) = \int_{-\infty}^{\infty} P_Y(B-x) dP_X(x) \\
+\end{align*}
+
+We derive the distribution function:
+
+\begin{align*}
+P\{X+Y < z\} = F_{X+Y}(z) &= \int_{-\infty}^{\infty} P_Y((-\infty, z] - x) dP_X(x) = \int_{-\infty}^{\infty} P_X((-\infty, z] - y) dP_Y(y) \\
+&= \int_{-\infty}^{\infty} F_Y(z - x) dP_X(x) = \int_{-\infty}^{\infty} F_X(z - y) dP_Y(y)
+\end{align*}
+
+
+

@@ -1,0 +1,57 @@
+\section{Measures}
+
+\subsection{Definitions}
+
+$(X,S)$ is a $\textbf{measurable space}$ if $S$ is a sigma algebra and $\bigcup S = X$
+
+$(X,S,\mu)$ is a $\textbf{measure space}$ if $(X,S)$ is a measurable space and $\mu$ a measure defined on $S$
+
+$E$ is a $\textbf{measurable set}$ if $E\in S$.
+
+$\mu : \xi \rightarrow \mathbb{R}$ s.t $\xi$ is a class of sets of $X$ is a $\textbf{set function}$
+
+A set function $\mu : \xi \rightarrow [0, \infty]$ defined on a semi-ring $\xi$ is :
+
+\begin{itemize}
+\item $\textbf{Content}$ if additive
+\item A $\textbf{premeasure}$ if countably additive
+\item A $\textbf{measure}$ if is a premeasure on a $\sigma$-algebra
+\item A $\textbf{probability measure}$ if is a measure with $\mu(\Omega) = 1$
+\end{itemize}
+
+$A$ and $B$ respectively positive and negative  with respect to $\mu$ are a $\textbf{Hahn decomposition}$ of $X$ if $X = A \cup B$ and $A \cap B = \emptyset$ 
+
+\subsection{Properties of set functions}
+\begin{itemize}
+
+\item Finitly additive: 
+ $E_1 \dots E_n \in \xi \implies \mu(\sum_{i=1}^n E_i) = \sum_{i=1}^n \mu(E_i)$
+ 
+\item Countably additive: 
+ $E_1 \dots \in \xi \implies \mu(\sum_{i=1}^{\infty} E_i) = \sum_{i=1}^{\infty} \mu(E_i) $
+
+\item Finite: 
+ $E \in \xi \implies \left |\mu(E) \right| < \infty $
+
+ \item Continuous from below
+\[ \left.
+\begin{array}{l l}
+\star \; E \in \xi \\
+\star \; \forall i \; E_i \in \xi \\
+\star \; (E_n)_{n \in \mathbb{N}} \uparrow E \\
+\end{array}
+\right\} \lim_{n \to\infty}\mu(E_n) = \mu(E) \]
+
+\item Continuous from above
+\[ \left.
+\begin{array}{l l}
+\star \; E \in \xi \\
+\star \; \forall i \; E_i \in \xi \\
+\star \; (E_n)_{n \in \mathbb{N}} \downarrow E \\
+\star \; \exists m$ s.t $|\mu(E_m)| < \infty 
+\end{array}
+\right\} \lim_{n \to\infty}\mu(E_n) = \mu(E) \]
+
+\end{itemize}
+
+
