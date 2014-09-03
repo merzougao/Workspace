@@ -54,4 +54,35 @@ $A$ and $B$ respectively positive and negative  with respect to $\mu$ are a $\te
 
 \end{itemize}
 
+\subsection{Extension of measures}
+
+\begin{itemize}
+
+\item Semiring $\rightarrow$ Ring \\
+Let $A \in R(P)$, $E_i \in P$, $\bigcup_{i=1}^{\infty} E_i \supset A$ 
+\begin{align}
+\mu_{R(P)}(A) = \sum_{i=1}^{\infty}\mu_P(E_i)
+\end{align}
+
+
+\item Ring $\rightarrow$ Power set \\
+Let $A \in 2^\Omega$, $E_i \in R(P)$, $\bigcup_{i=1}^{\infty} E_i \supset A$ 
+\begin{align}
+\mu_{2^\Omega}(A) = \inf\{\sum_{i=1}^{\infty}\mu_{R(P)}(E_i)\}
+\end{align}
+
+\item Power set $\rightarrow$ measurable sets \\
+We retrict $\mu_{S^*} = \mu_{2^\Omega} \mid_{S^*}$
+
+\item Measurable sets $\rightarrow$ sigma algebra \\
+We retrict $\mu_{\sigma(P)} = \mu_{2^\Omega} \mid_{\sigma(P)}$
+
+\item Sigma algebra $\rightarrow$ complete sigma algebra \\
+For $E$ subset of a 0-measure set:
+$\mu_{\bar{S^*}}(A \cup E) = \mu_{\sigma(P)}(A)$
+\end{itemize}
+
+\begin{align*}
+\includegraphics[scale=0.5]{../images/extension_measures.png}
+\end{align*}
 
