@@ -1,0 +1,56 @@
+\section{Product spaces}
+\subsection{Definitions}
+Let $(X,\mathcal{S},\mu)$ and $(W,\mathcal{W})$ be respectively a measure space and a measurable space.
+
+$X\times W = \{(x,y) : x \in X, y \in W\}$ is called the $\textbf{product space}$.
+
+$T_x:(X\times W ) \longmapsto  X$ is called the $\textbf{X-section}$ or the $\textbf{Projection function}$ if $T_x(x,w) = x$
+\subsection{Mixture of measures}
+Let $v : (X, \mathcal{W}) \longmapsto \mathbb{R} $ be a function defined by :
+\begin{align*}
+&v(\bullet, E) = v_x(E) \text{ measure on $\mathcal{W}$ for $x \in X$ fixed} \\
+&v(x, \bullet) = v_E(x) \text{ is $\mathcal{S}$-measurable for $E \in \mathcal{W}$ fixed} \\
+&\text{f is always assumed to be measurable non negative}
+\end{align*}
+
+\begin{itemize}
+\item $\underline{\text{Integration of }f:W \longmapsto \mathbb{R} \quad w.r.t \quad \lambda \:on\: \mathcal{W}}$
+
+For $E \in \mathcal{W}$ we define the measure :
+\begin{align*}
+\lambda(E) = \int_X v_E(x)\:d\mu(x)\quad \text{is a measure on } \mathcal{W}
+\end{align*}
+Let's define the non negative $\mathcal{S}$-measurable function a.e as :
+
+\begin{align*}
+g : X &\longmapsto \mathbb{R} \\
+x &\longmapsto \int_{\mathcal{W}}f(E)\:dv_x(E) = \int f\:dv_x
+\end{align*}
+We have then : 
+
+\begin{align*}
+\int_{\mathcal{W}}f(E)\:d\lambda(E) &= \int_X\Big(\int_{\mathcal{W}}f(E)\:dv_x(E)\Big)d\mu(x) \\
+\int_{\mathcal{W}}f\:d\lambda &= \int_X\int_{\mathcal{W}}f\:dv_xd\mu
+\end{align*}
+\end{itemize}
+
+\subsection{Product measure}
+For $E = A \times B$ we take the measure $v$ to be non dependent on x. So the product measure becomes :
+
+\begin{align}
+\lambda(E) &= \int_X v_B\mathbbm{1}_A\:d\mu(x) \\
+\lambda(E) &= v(B)\mu(A)
+\end{align}
+
+\subsection{Fubini's Theorem}
+\begin{itemize}
+\item $(X, \mathcal{S}, \mu)$ and $(Y, \mathcal{T}, \mathcal{v})$ $\sigma$-finite measure spaces
+
+\item f is an $\mathcal{S} \times \mathcal{T}$-measurable non negative function defined a.e $(\lambda = \mu \times \mathcal{v})$
+
+\begin{align}
+\int_{X \times Y}fd\lambda = \int_X \Big(\int_Yf_xd\mathcal{v}\Big)d\mu(x) = \int_Y \Big(\int_Xf_yd\mu\Big)d\mathcal{v}(y)
+\end{align}
+
+\end{itemize}
+

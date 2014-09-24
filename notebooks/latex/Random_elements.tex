@@ -33,7 +33,7 @@ Let $X,Y$ be two random variables. Let $\phi(x_1,x_2) = x_1 + x_2$. We have the 
 \begin{align*}
 P\{\omega: X(\omega)+Y(\omega) \in B\} &= P\{X+Y \in B\} \\
 &= P\{\phi(X,Y) \in B\} \\
-&= P\{(X+Y) \in \phi^{-1}B\} \\
+&= P\{(X,Y) \in \phi^{-1}B\} \\
 &= \int \mathbbm{1}_{\phi^{-1}B}(x,y)\;dP(X^{-1}\times Y^{-1}) \\
 &= \iint \mathbbm{1}_{\phi^{-1}B}(x,y)\;dPX^{-1}\; dPY^{-1} \\
 &= \int PX^{-1}(B-y) dPY^{-1} = \int PY^{-1}(B-x) dPX^{-1} \\
@@ -48,5 +48,12 @@ P\{X+Y < z\} = F_{X+Y}(z) &= \int_{-\infty}^{\infty} P_Y((-\infty, z] - x) dP_X(
 &= \int_{-\infty}^{\infty} F_Y(z - x) dP_X(x) = \int_{-\infty}^{\infty} F_X(z - y) dP_Y(y)
 \end{align*}
 
+\newpage
+\subsection{Conditional Expectation and probabilities}
+Let $\mathcal{G} \subseteq \mathcal{F}$ be a sub $\sigma$-algebra and $X:\Omega \longmapsto \mathbb{R}$ a measurable function. Let $P_{|\mathcal{G}}$ be the restriction of $P$ on $\mathcal{G}$. We have : $P_{|\mathcal{G}} = P/P(\mathcal{G})$ and then :
+\begin{align*}
+    \int_A XdP_{|\mathcal{G}}	&= \int_A Xd(P/P(\mathcal{G})) \\
+				&= \frac{1}{P(\mathcal{G})} \int_A XdP \quad \forall A \in \mathcal{G}
+\end{align*}
 
 

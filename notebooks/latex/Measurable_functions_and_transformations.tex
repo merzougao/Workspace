@@ -1,0 +1,60 @@
+\section{Measurable functions and transformations}
+
+\subsection{Definitions}
+Let $(X,S)$ and $(Y,G)$ be measurables spaces space
+
+$T : X \rightarrow Y$ is a $\textbf{measurable transformation}$ if for $B\in G$: 
+\begin{align}
+T^{-1}(G) \in S
+\end{align}
+
+In particular $f:D \rightarrow \mathbb{R}$ is a $\textbf{measurable function}$ if :
+\begin{align}
+D &\in S\\
+\{x &\in D:f(x) \leq a\} \in S 
+\end{align}
+
+$f_+$ is the $\textbf{positive part}$ of $f$ if:
+
+\begin{align}
+f_+(x) = 
+\begin{cases}
+f(x) \;&if \;f(x) > 0\\ 
+0 \;&if \;f(x) \leq 0
+\end{cases}
+\end{align}
+
+$f_-$ is the $\textbf{negative part}$ of $f$ if:
+
+\begin{align}
+f_-(x) = 
+\begin{cases}
+-f(x) \;&if \;f(x) < 0\\ 
+0 \;&if \;f(x) \geq 0
+\end{cases}
+\end{align}
+
+
+
+$\mathbbm{1}_E : X \rightarrow \{0,1\}$ is a $\textbf{characteristic function}$ or $\textbf{indicator function}$ on the subset $E \subset X$ if :
+
+\begin{align}
+\mathbbm{1}_E(x) = 
+\begin{cases}
+1 \;if \;x \in E\\ 
+0 \;if \;x \notin E
+\end{cases}
+\end{align}
+
+$f : X \rightarrow \mathbb{R}$ is a $\textbf{simple function}$ if for $a_i \in \mathbb{R}$ and $E_i \in S$ disjoints we have :
+
+\begin{align} f(x) = \sum_{i=1}^na_i\mathbbm{1}_{E_i}(x)\end{align}
+
+\subsection{Properties of measurable functions}
+\begin{itemize}
+\item If $(f_i)_{i\in\mathbb({N}}$ measurable functions with $a_i \in \mathbb{R}$ then : $\sum_i a_if_i$, $fg$, $f/g$  are measurable
+\item If $f,g$ measurable functions $\rightarrow$ $\{f(x) = g(x)\}$ $\{f(x) \leq g(x)\}$ $\{f(x) < g(x)\}$ are measurable sets
+\item If $f$ is measurable then $|f(x)|^a$ is measurable $\forall a \in \mathbb{R}$
+\item If $\{f_n\}$ a sequence of measurable functions, then $\lim_{i \rightarrow \infty}f_n(x) = f(x)$ is measurable
+\item If $T:X \rightarrow Y$ measurable transformation, then $\mu(T^{-1})$ is a measure on $G$
+\end{itemize}
