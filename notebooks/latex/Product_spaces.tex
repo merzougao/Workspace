@@ -1,4 +1,4 @@
-\section{Product spaces}
+\section{\LARGE Product spaces}
 \subsection{Definitions}
 Let $(X,\mathcal{S},\mu)$ and $(W,\mathcal{W})$ be respectively a measure space and a measurable space.
 
@@ -44,12 +44,12 @@ For $E = A \times B$ we take the measure $v$ to be non dependent on x. So the pr
 
 \subsection{Fubini's Theorem}
 \begin{itemize}
-\item $(X, \mathcal{S}, \mu)$ and $(Y, \mathcal{T}, \mathcal{v})$ $\sigma$-finite measure spaces
+\item $(X, \mathcal{S}, \mu)$ and $(Y, \mathcal{Y}, \lambda)$ $\sigma$-finite measure spaces
 
-\item f is an $\mathcal{S} \times \mathcal{T}$-measurable non negative function defined a.e $(\lambda = \mu \times \mathcal{v})$
+\item f is an $\mathcal{S} \times \mathcal{Y}$-measurable non negative function defined a.e $(\lambda = \mu \times \lambda)$
 
 \begin{align}
-\int_{X \times Y}fd\lambda = \int_X \Big(\int_Yf_xd\mathcal{v}\Big)d\mu(x) = \int_Y \Big(\int_Xf_yd\mu\Big)d\mathcal{v}(y)
+\int_{X \times Y}fd\lambda = \int_X \Big(\int_Yf_xd\lambda\Big)d\mu(x) = \int_Y \Big(\int_Xf_yd\mu\Big)d\lambda(y)
 \end{align}
 
 \end{itemize}

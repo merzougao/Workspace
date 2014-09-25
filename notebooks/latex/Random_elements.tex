@@ -1,7 +1,7 @@
 
-\section{Random Elements}
+\section*{\LARGE Random Elements}
 
-\subsection{Definitions}
+\subsection*{Definitions}
 
 $(\Omega, \mathcal{F}, P)$ is a $\textbf{Probability space}$
 
@@ -27,7 +27,7 @@ x &\longmapsto P_X(-\infty, x)
 \noindent The $\textbf{Expectation}$ of a random variable $X$ is $E(X) = \displaystyle\int_{\Omega} X(\omega)dP(\omega)$
 
 
-\subsection{Sum of two Random variables}
+\subsection*{Sum of two Random variables}
 Let $X,Y$ be two random variables. Let $\phi(x_1,x_2) = x_1 + x_2$. We have the distribution:
 
 \begin{align*}
@@ -48,12 +48,93 @@ P\{X+Y < z\} = F_{X+Y}(z) &= \int_{-\infty}^{\infty} P_Y((-\infty, z] - x) dP_X(
 &= \int_{-\infty}^{\infty} F_Y(z - x) dP_X(x) = \int_{-\infty}^{\infty} F_X(z - y) dP_Y(y)
 \end{align*}
 
-\newpage
-\subsection{Conditional Expectation and probabilities}
-Let $\mathcal{G} \subseteq \mathcal{F}$ be a sub $\sigma$-algebra and $X:\Omega \longmapsto \mathbb{R}$ a measurable function. Let $P_{|\mathcal{G}}$ be the restriction of $P$ on $\mathcal{G}$. We have : $P_{|\mathcal{G}} = P/P(\mathcal{G})$ and then :
+
+\subsection*{Discrete random variable}
+
+$P_X$ is called $\textbf{discrete}$ if it  takes values in a countable set $\mathcal{C} = \{c_1,c_2,\dots\}$ s.t $P_x(\mathcal{C}^c) = 0$
+
+We have the random variable: 
+
 \begin{align*}
-    \int_A XdP_{|\mathcal{G}}	&= \int_A Xd(P/P(\mathcal{G})) \\
-				&= \frac{1}{P(\mathcal{G})} \int_A XdP \quad \forall A \in \mathcal{G}
+X : \Omega &\longmapsto \mathcal{C} \\
+\omega &\longmapsto c_i
+\end{align*}
+
+\begin{itemize}
+\item Distribution
+
+We derive the distribution : 
+
+\begin{align*}
+P_X : \sigma(\mathcal{C}) &\longmapsto [0,1] \\
+B &\longmapsto P\{X^{-1}(B)\} = P\Big\{X^{-1}\Big(\bigcup_{c_i \in B} c_i\Big)\Big\} = P\Big\{\bigcup_{c_i \in B}X^{-1}(\{c_i\})\Big\} \\
+B &\longmapsto \boxed{\displaystyle\sum_{c_i \in B} PX^{-1}(\{c_i\})} \quad \Big( = \sum_{c_i \in B} p_X(c_i) = \sum_{c_i \in \mathcal{C}} p_X(c_i) \mathbbm{1}_B(c_i)\Big)
+\end{align*}
+
+\item Probability mass function
+
+$p_X$ (Distribution restricted to sample space) is called the $\textbf{probability mass function}$ defined by :
+
+\begin{align*}
+p_X:\mathcal{C} &\longmapsto [0,1] \\
+c_i &\longmapsto P_X(c_i)
+\end{align*}
+
+
+\item Expectation
+
+When $\mathcal{C} \subset \mathbb{R}$ we have for $I$ countable index set : $\mathcal{C} = \bigsqcup_i \{c_i\}$. We have then :
+
+\begin{align*}
+    X(\omega) &= \sum_{c_i \in \mathcal{C}} c_i\mathbbm{1}_{X^{-1}\{c_i\}}(\omega) \\
+E(X) &= \int_{\Omega} \sum_{c_i \in \mathcal{C}} c_i\mathbbm{1}_{X^{-1}\{c_i\}}(\omega) dP(\omega) \\ 
+&= \sum_{c_i \in \mathcal{C}} c_iP(X^{-1}\{c_i\}) \\ 
+E(X) &= \boxed{\displaystyle\sum_{c_i \in \mathcal{C}} c_ip_X(c_i)} \\
+\end{align*}
+
+
+\item Sum of two discrete random variables
+
+Let $\mathcal{C}_1, \mathcal{C}_2$ be coutable sets and $X_i:\Omega \longmapsto \mathcal{C}_i \quad i \in \{1,2\}$ be random variables. 
+
+
+\begin{align*}
+P\{X_1+X_2 \in B\} &= \int_{\mathbb{R}} P_{X_1}(B-x_2) dP_{X_2}(x_2) \quad &\text{Definition }\\
+&=\int_{\mathbb{R}} \sum_{c_i \in \mathcal{C}_1} p_{X_1}(c_i)\mathbbm{1}_{\{B-x_2\}}(c_i) dP_{X_2}(x_2) &\text{Expanding $P_{X_1}$} \\
+&=\int_{\mathbb{R}} \sum_{c_i \in \mathcal{C}_1} p_{X_1}(c_i)\mathbbm{1}_{\{B-c_i\}}(x_2) dP_{X_2}(x_2) &\text{$c_i \in B-x_2 \implies x_2 \in B-c_i$}\\
+&=\sum_{c_i \in \mathcal{C}_1} p_{X_1}(c_i)P_{X_2}(B-c_i) \\
+&=\sum_{c_i \in \mathcal{C}_1}\sum_{b_i \in \mathcal{C}_2} p_{X_1}(c_i) p_{X_2}(b_i)\mathbbm{1}_{\{B-c_i\}}(b_i) \\
+&=\boxed{\displaystyle\sum_{c_i \in \mathcal{C}_1}\sum_{b_i \in \{B - c_i\}}p_{X_1}(c_i) p_{X_2}(b_i)}
+\end{align*}
+
+
+\end{itemize}
+
+
+\subsection*{Continuous random variable}
+$P_X$ absolutly continuous w.r.t the Lebesgue measure $\mu$:
+
+\begin{align}
+P_X << \mu &\implies \exists \; p_d \quad s.t \quad P_X = \int p_d(x)d\mu
+\end{align}
+The function $p_d$ is then called the $\textbf{Probability density function}$
+
+
+
+\newpage
+\subsection*{Conditional Expectation and probabilities}
+Let $\mathcal{G} \subseteq \mathcal{F}$ be a sub $\sigma$-algebra and $X:\Omega \longmapsto \mathbb{R}$ a measurable function. Let $P_{|\mathcal{G}}$ be the restriction of $P$ on $\mathcal{G}$. We have : $P_{|\mathcal{G}} = P/P(\mathcal{G})$ and then :
+
+\begin{align*}
+    P(X\in A | B)   &= \int_B \mathbbm{1}_{X^{-1}A}dP_B \\
+		    &= \frac{1}{P(B)}\int_B \mathbbm{1}_{X^{-1}A}dP \\
+		    &= \frac{1}{P(B)} P(X\in A \cap B)
+\end{align*}
+
+\begin{align*}
+    \mathbb{E}(X | B)	&= \int_B XdP_B \\
+			&= \int_B Xd(P/P(B)) \\
+			&= \frac{1}{P(B)} \int_B XdP 
 \end{align*}
 
 

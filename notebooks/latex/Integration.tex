@@ -1,0 +1,138 @@
+\section{Integration}
+
+\subsection{Definitions}
+$L_1$ is the class of integrable functions
+
+A non negative, measurable function $f$ is $\textbf{integrable}$ if $\int f < \infty$
+
+A measurable function $f$ is $\textbf{integrable}$ if $f_+$ and $f_-$ are integrables 
+
+\subsection{Integration of functions}
+\begin{itemize}
+\item Integral of characteristic function
+Let $(X,S,\mu)$ be a measure space and $E\in S$
+
+\begin{align}
+\int \mathbb{1}_E d\mu =  \mu(E)
+\end{align}
+
+
+\item Integral of non negative, simple function
+
+Let $(X,S,\mu)$ be a measure space, $E_1 \dots E_n$, disjoints sets of $S$ where $\bigcup E_i = X$ and $f = \sum_{i=1}^na_i\mathbb{1}_{E_i}$
+
+\begin{align}
+\int fd\mu =  \sum_{i=1}^na_i\mu(E_i)
+\end{align}
+
+Note : For simple functions $\int$ and $\lim$ commute
+
+
+\item Integral of non negative, measurable function
+
+Let $(X,S,\mu)$ be a measure space,  $f$ non negative measurable function, $(f_n)_{n \in \mathbb{N}} \uparrow f$ s.t $\forall i \;f_i$ simple functions with $\lim_{n \to \infty}f_n(x) = f(x)$ 
+
+\begin{align}
+\int fd\mu =  \lim_{n \to \infty}\int f_nd\mu
+\end{align}
+
+Note : $\mu(E) = 0 \implies \int_E fd\mu = 0$ with $E \in S$
+    
+
+\item Integral of non negative, measurable function a.e
+
+Let $(X,S,\mu)$ be a measure space, $f$ non negative, measurable function a.e, $g$ non negative, measurable function with $f = g$ a.e
+
+\begin{align}
+\int fd\mu =  \int gd\mu
+\end{align}
+
+
+\item Integral of measurable function a.e
+
+Let $(X,S,\mu)$ be a measure space, $f$ measurable function a.e, $f_+$ and  $f_-$ non negative, measurable functions a.e whith $f = f_+ - f_-$
+
+\begin{align}
+\int f =  \int f_+ - \int f_-
+\end{align}
+\end{itemize}
+
+\subsection{Properties of the integral}
+\begin{itemize}
+
+\item $f$ integrable $\implies$ $f$ finite a.e
+
+\item $(f_i)_{i\in \mathbb{N}}$ are integrable functions then :
+\begin{align}
+\int \sum_{i\in \mathbb{N}} f_id\mu = \sum_{i\in \mathbb{N}} \int f_id\mu
+\end{align}
+
+\item $f \in L_1 \iff f_+, f_- \in L_1 \iff |f| \in L_1$
+\end{itemize}
+
+
+\subsection{Theorems}
+\begin{itemize}
+\item Monotone Convergence Theorem \\
+
+Let $(X,S,\mu)$ be a measure space, $(f_n)_{n \in \mathbb{N}}$ monotone increasing sequence of non negative, measurable, functions a.e, $f$ non negative, measurable function with $ \lim_{n \to \infty}f_n(x) = f(x)$, $x\in X$ a.e
+
+\begin{align}
+\lim_{n \to \infty}\int f_nd\mu = \int fd\mu
+\end{align}
+
+\item Fatou's Lemma \\
+Let $(X,S,\mu)$ be a measure space, $(f_n)_{n \in \mathbb{N}}$ monotone increasing sequence of non negative, measurable, functions a.e
+
+\begin{align}
+\lim_{n \to \infty}\inf\int f_nd\mu = \int(\lim_{n \to \infty}\inf f_n)d\mu
+\end{align}
+
+\item Dominated convergence \\
+Let $(X,S,\mu)$ measure space, $(f_n)_{n \in \mathbb{N}}$ sequence of integrable functions, $g$ integrable function s.t $\forall n$, $\left|f_n\right| \leq \left|g\right|$ a.e, f measurable function s.t $f_n(x) \rightarrow f(x)$ a.e
+
+\begin{align}
+f &\in L_1 \\ 
+\int \left|f_n - f\right|d\mu &\rightarrow 0
+\end{align}
+
+
+\item Transformation theorem  \\
+Let $(X,S,\mu)$ measure space, $(Y,\xi)$ measurable space, $T : X \rightarrow Y$ Transformation defined a.e, $f : Y \rightarrow \mathbb{R}$ measurable function
+
+\begin{align}
+\int_Y fd(\mu T^{-1}) = \int_X fTd\mu
+\end{align}
+
+\item Radon-Nikodym theorem  \\
+Let $(X,S,\mu)$ totally $\sigma$-finite measure space, $ v << \mu $ with $v$ $\sigma$-finite signed measure on $S$
+
+\begin{align}
+&\exists f:X\rightarrow [0,\infty)\text{measurable} \\
+&v(E) = \int fd\mu\;\;\; \forall E\in S
+\end{align}
+
+Notationwise: $f = \cfrac{dv}{d\mu}$
+
+\item Lebesgue decomposition
+
+Let $(X,S)$ be a measurable space, $\mu$ and $v$ $\sigma$ -finite signed measure on $S$
+
+\begin{align}
+\exists v_1, v_2 \;\; s.t \;\; v &= v_1 + v_2 \\
+v_0 &\perp \mu \\
+v_1 &<< \mu
+\end{align}
+
+\item Generated measures
+
+Let $(X,S,\mu)$ be a measure space, $g:X\rightarrow [0,\infty]$ measurable, $v(E) = \int_E gd\mu$
+
+
+\begin{align}
+\text{Then $v$ is a measure on $(X, S)$ and for any $f:X\rightarrow \mathbb{R}$}
+\int_X fdv = \int_X fgd\mu
+\end{align}
+
+\end{itemize}
+
