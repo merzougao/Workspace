@@ -97,4 +97,22 @@ x ≡ y = Id _ x y
             → ((x y : X) → (p : x ≡ y) → A x y p)
 ≡-induction f x x (refl x) = f x
 
+-- Homotopy theory --
+---------------------
+
+transport   : { X : 𝓤  ̇} { A : X → 𝓥  ̇}
+            → (x y : X) 
+            → x ≡ y 
+            → (A x → A y)
+transport = ≡-induction λ x →  (λ y →  y)
+--transport x x (refl x) = λ y → y
+
+concat  : {X : 𝓤 ̇} 
+        → (x y : X) 
+        → x ≡ y 
+        → ((z : X) →  (y ≡ z) → (x ≡ z))
+        
+concat = ≡-induction λ x → λ z → λ p → p
+--concat x x (refl x) = λ z → λ p → p
+
 
