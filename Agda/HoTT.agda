@@ -6,6 +6,10 @@ open import Universes public
 variable
  𝓤 𝓥 𝓦 𝓣  : Universe
 
+-- Type of an element --
+type-of : {X : 𝓤 ̇} →  X → 𝓤 ̇
+type-of {𝓤} {X} x = X
+
 -- Basic Types --
 -----------------
 
@@ -97,15 +101,21 @@ x ≡ y = Id _ x y
             → ((x y : X) → (p : x ≡ y) → A x y p)
 ≡-induction f x x (refl x) = f x
 
+-- left and Right hand side of a path p : x ≡ y --
+lhs : {X : 𝓤 ̇} { x y : X} →  x ≡ y → X
+lhs {𝓤} {X} {x} {y} p = x
+
+rhs : {X : 𝓤 ̇} { x y : X} →  x ≡ y → X
+rhs {𝓤} {X} {x} {y} p = y
+
 -- Homotopy theory --
 ---------------------
 
-transport   : { X : 𝓤  ̇} { A : X → 𝓥  ̇}
-            → (x y : X) 
+transport : {X : 𝓤 ̇} (A : X → 𝓥 ̇) {x y : X} 
             → x ≡ y 
             → (A x → A y)
-transport = ≡-induction λ x →  (λ y →  y)
---transport x x (refl x) = λ y → y
+transport A p = ≡-induction (λ x → ( λ (y : A x) → y)) (lhs p) (rhs p) p
+--transport (refl x) = λ y → y
 
 concat  : {X : 𝓤 ̇} 
         → (x y : X) 
@@ -114,5 +124,13 @@ concat  : {X : 𝓤 ̇}
         
 concat = ≡-induction λ x → λ z → λ p → p
 --concat x x (refl x) = λ z → λ p → p
+
+-- Inversion of paths --
+_⁻¹ : {X : 𝓤 ̇} {x y : X} → x ≡ y → y ≡ x
+p ⁻¹ = ≡-induction (λ x → (refl x)) (lhs p) (rhs p) p
+
+-- Functions are functors --
+ap : {X : 𝓤 ̇} {Y : 𝓥 ̇}  → (f : X → Y) {x y : X} →  x ≡ y → (f x ≡ f y)
+ap f p = ≡-induction (λ x → (refl ( f x))) (lhs p) (rhs p) p
 
 
