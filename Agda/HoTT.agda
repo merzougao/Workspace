@@ -1,43 +1,44 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
 module HoTT where
-open import Universes public
+open import Agda.Primitive
 
-variable
- 𝓤 𝓥 𝓦 𝓣  : Universe
+-- Universes --
+---------------
+𝓤₀ : Set (lsuc lzero)
+𝓤₀ = Set lzero
 
--- Type of an element --
-type-of : {X : 𝓤 ̇} →  X → 𝓤 ̇
-type-of {𝓤} {X} x = X
+𝓤₁ : Set (lsuc (lsuc lzero))
+𝓤₁ = Set (lsuc lzero)
 
 -- Basic Types --
 -----------------
 
-data 𝟘 : 𝓤₀ ̇ where
+data 𝟘 : 𝓤₀ where
 
-data 𝟙 : 𝓤₀ ̇ where
+data 𝟙 : 𝓤₀ where
     ✭ : 𝟙
 
-𝟙-induction : {A : 𝟙 → 𝓤 ̇}
+𝟙-induction : ∀ {n} {A : 𝟙 → Set n}
             → A ✭
             → ((x : 𝟙) → A x)
 𝟙-induction a ✭ = a 
 
 -- Negation --
 --------------
-¬ : 𝓤 ̇ → 𝓤 ̇
+¬ : ∀ {n} → Set n → Set n
 ¬ A = A → 𝟘
 
 
 -- Natural Numbers --
 ---------------------
-data ℕ : 𝓤₀ ̇ where
+data ℕ : 𝓤₀ where
   zero : ℕ
   succ : ℕ → ℕ
  
 {-# BUILTIN NATURAL ℕ #-}
 
-ℕ-induction : {A : ℕ → 𝓤 ̇} 
+ℕ-induction : ∀ {n} {A : ℕ → Set n} 
             → A zero 
             → ((n : ℕ) → A n → A (succ n))
             → ((n : ℕ) →  A n)
@@ -46,11 +47,11 @@ data ℕ : 𝓤₀ ̇ where
 
 -- Coproducts ------
 --------------------
-data _+_ (X : 𝓤 ̇) (Y : 𝓥 ̇) : 𝓤 ⊔ 𝓥 ̇ where
+data _+_ {n m : Level} (X : Set n) (Y : Set m) : Set (n ⊔ m) where
     inl : X → X + Y
     inr : Y → X + Y
 
-+-induction : {X : 𝓤 ̇} {Y : 𝓥 ̇} {A : X + Y → 𝓦 ̇}
++-induction : ∀ {n m} {X : Set n} {Y : Set m} {A : X + Y → Set (n ⊔ m)}
             → ((x : X) → A (inl x))
             → ((y : Y) → A (inr y))
             → ((z : X + Y) → A z)
@@ -59,65 +60,65 @@ data _+_ (X : 𝓤 ̇) (Y : 𝓥 ̇) : 𝓤 ⊔ 𝓥 ̇ where
 
 -- Dependent sum ---
 --------------------
-data Σ {X : 𝓤 ̇} (Y : X → 𝓥 ̇) : 𝓤 ⊔ 𝓥 ̇ where
+data Σ {n m : Level } {X : Set n} (Y : X → Set m) : Set (n ⊔ m) where
     _,_ : (x : X) → Y x → Σ Y
 
-proj₁ :{X : 𝓤 ̇} {Y : X → 𝓥 ̇} → Σ Y → X
+proj₁ : ∀ {n m} {X : Set n} {Y : X → Set m} → Σ Y → X
 proj₁ (x , y) = x
 
-proj₂ :{X : 𝓤 ̇} {Y : X → 𝓥 ̇} → (z : Σ Y) → Y (proj₁ z)
+proj₂ : ∀ {n m} {X : Set n} {Y : X → Set m} → (z : Σ Y) → Y (proj₁ z)
 proj₂ (x , y) = y
 
-Σ-induction : {X : 𝓤 ̇} {Y : X → 𝓥 ̇} {A : Σ Y → 𝓦  ̇} 
+Σ-induction : ∀ {n m r} {X : Set n} {Y : X → Set m} {A : Σ Y → Set r} 
             → ((x : X) → (y : Y x) → A (x , y))
             → ((z : Σ Y) → A z)
 Σ-induction f (x , y) = f x y
 
-_×_ : 𝓤 ̇ → 𝓥 ̇ → 𝓤 ⊔ 𝓥 ̇
+_×_ : ∀ {n m} → Set n → Set m → Set (n ⊔ m)
 X × Y = Σ (λ (x : X) → Y)
 
 -- Dependent functions --
 -------------------------
-Π  : {X : 𝓤 ̇} (Y : X → 𝓥 ̇) → 𝓤 ⊔ 𝓥 ̇ 
-Π {𝓤} {𝓥} {X} Y = (x : X) → Y x
+Π  : ∀ {n m} {X : Set n} (Y : X → Set m) → Set (n ⊔ m)
+Π {n} {m} {X} Y = (x : X) → Y x
 
-dom : {X : 𝓤 ̇} {Y : 𝓥 ̇} → (X → Y) → 𝓤 ̇
-dom {𝓤} {𝓥} {X} {Y} f = X
+dom : ∀ {n m} {X : Set n} {Y : Set m} → (X → Y) → Set n
+dom {n} {m} {X} {Y} f = X
 
-rng : {X : 𝓤 ̇} {Y : 𝓥 ̇} → (X → Y) → 𝓥 ̇
-rng {𝓤} {𝓥} {X} {Y} f = Y
+rng : ∀ {n m} {X : Set n} {Y : Set m} → (X → Y) → Set m
+rng {n} {m} {X} {Y} f = Y
 
 -- Identity Types --
 --------------------
 
-data Id {𝓤} (X : 𝓤 ̇) : X → X → 𝓤 ̇ where
+data Id {n : Level} (X : Set n) : X → X → Set n where
     refl : (x : X) → Id X x x
 
-_≡_ : {X : 𝓤  ̇} → X → X → 𝓤  ̇
+_≡_ : ∀ {n} {X : Set n} → X → X → Set n
 x ≡ y = Id _ x y 
 
-≡-induction : {X : 𝓤 ̇} {A : (x y : X) → (x ≡ y) → 𝓥 ̇} 
+≡-induction : ∀ {n m} {X : Set n} {A : (x y : X) → (x ≡ y) → Set m} 
             → ((x : X) → A x x (refl x))
             → ((x y : X) → (p : x ≡ y) → A x y p)
 ≡-induction f x x (refl x) = f x
 
 -- left and Right hand side of a path p : x ≡ y --
-lhs : {X : 𝓤 ̇} { x y : X} →  x ≡ y → X
-lhs {𝓤} {X} {x} {y} p = x
+lhs : ∀ {n} {X : Set n} { x y : X} →  x ≡ y → X
+lhs {n} {X} {x} {y} p = x
 
-rhs : {X : 𝓤 ̇} { x y : X} →  x ≡ y → X
-rhs {𝓤} {X} {x} {y} p = y
+rhs : ∀ {n} {X : Set n} { x y : X} →  x ≡ y → X
+rhs {n} {X} {x} {y} p = y
 
 -- Homotopy theory --
 ---------------------
 
-transport : {X : 𝓤 ̇} (A : X → 𝓥 ̇) {x y : X} 
+transport : ∀ {n m} {X : Set n} {A : X → Set m} {x y : X} 
             → x ≡ y 
             → (A x → A y)
-transport A p = ≡-induction (λ x → ( λ (y : A x) → y)) (lhs p) (rhs p) p
+transport {n} {m} {X} {A} p = ≡-induction (λ x → ( λ (y : A x) → y)) (lhs p) (rhs p) p
 --transport (refl x) = λ y → y
 
-concat  : {X : 𝓤 ̇} 
+concat  : ∀ {n} {X : Set n} 
         → (x y : X) 
         → x ≡ y 
         → ((z : X) →  (y ≡ z) → (x ≡ z))
@@ -126,11 +127,28 @@ concat = ≡-induction λ x → λ z → λ p → p
 --concat x x (refl x) = λ z → λ p → p
 
 -- Inversion of paths --
-_⁻¹ : {X : 𝓤 ̇} {x y : X} → x ≡ y → y ≡ x
+_⁻¹ : ∀ {n} {X : Set n} {x y : X} → x ≡ y → y ≡ x
 p ⁻¹ = ≡-induction (λ x → (refl x)) (lhs p) (rhs p) p
 
 -- Functions are functors --
-ap : {X : 𝓤 ̇} {Y : 𝓥 ̇}  → (f : X → Y) {x y : X} →  x ≡ y → (f x ≡ f y)
+ap : ∀ {n m} {X : Set n} {Y : Set m}  → (f : X → Y) {x y : X} →  x ≡ y → (f x ≡ f y)
 ap f p = ≡-induction (λ x → (refl ( f x))) (lhs p) (rhs p) p
+
+-- Homotopy between functions --
+_~_ : ∀ {n m} {X : Set n} {A : X → Set m}
+    → ((x : X) → A x) 
+    → ((x : X) → A x)
+    → Set (n ⊔ m)
+f ~ g = ∀ x → f x ≡ g x
+
+-- Operation on double negation --
+¬¬ : ∀ {n} → (X : Set n) → Set n
+¬¬ X = ¬ (¬ X)
+
+dni : ∀ {n} → {X : Set n} → X → ¬¬ X
+dni {n} {X} x = λ (f : ¬ X) → f x 
+
+_≢_ : ∀ {n} {X : Set n} → (x y : X) → Set n
+x ≢ y = ¬ (x ≡ y)
 
 
