@@ -20,8 +20,8 @@ type-of : ∀ {n} {X : Set n} → X → Set n
 type-of {n} {X} x = X
 
 _∘_ :   ∀ {n m k} {X : Set n} {Y : Set m} {Z : Set k}
-        → (X → Y) → (Y → Z) → (X → Z)
-f ∘ g = λ x → g ( f x)
+        → (Y → Z) → (X → Y) → (X → Z)
+g ∘ f = λ x → g ( f x)
 
 Id_fun : ∀ {n} {X : Set n} → X → X
 Id_fun x = x
@@ -84,6 +84,22 @@ data _+_ {n m : Level} (X : Set n) (Y : Set m) : Set (n ⊔ m) where
 +-induction f g (inl x) = f x
 +-induction f g (inr y) = g y
 
+-- Products --
+--------------
+data _×_ {n m : Level} (X : Set n) (Y : Set m) : Set (n ⊔ m) where
+    _,_ : (x : X) → (y : Y) → X × Y
+
+×-induction : ∀ {n m k} {X : Set n} {Y : Set m} {A : X × Y → Set k}
+            → ((x : X) → (y : Y) → A (x , y))
+            → ((z : X × Y) → A z)
+×-induction f (a , b) = f a b
+
+×pr₁ : ∀ {n m} {X : Set n} {Y : Set m} → X × Y → X
+×pr₁ = λ z → ×-induction (λ x y → x) z
+
+×pr₂ : ∀ {n m} {X : Set n} {Y : Set m} → X × Y → Y
+×pr₂ = λ z → ×-induction (λ x y → y) z
+
 -- Dependent sum ---
 --------------------
 data Σ {n m : Level } {X : Set n} (Y : X → Set m) : Set (n ⊔ m) where
@@ -94,19 +110,16 @@ data Σ {n m : Level } {X : Set n} (Y : X → Set m) : Set (n ⊔ m) where
 
 syntax -Σ X (λ x → Y) = Σ x ∶ X , Y 
 
-proj₁ : ∀ {n m} {X : Set n} {Y : X → Set m} → Σ Y → X
-proj₁ (x , y) = x
+pr₁ : ∀ {n m} {X : Set n} {Y : X → Set m} → Σ Y → X
+pr₁ (x , y) = x
 
-proj₂ : ∀ {n m} {X : Set n} {Y : X → Set m} → (z : Σ Y) → Y (proj₁ z)
-proj₂ (x , y) = y
+pr₂ : ∀ {n m} {X : Set n} {Y : X → Set m} → (z : Σ Y) → Y (pr₁ z)
+pr₂ (x , y) = y
 
 Σ-induction : ∀ {n m r} {X : Set n} {Y : X → Set m} {A : Σ Y → Set r} 
             → ((x : X) → (y : Y x) → A (x , y))
             → ((z : Σ Y) → A z)
 Σ-induction f (x , y) = f x y
-
-_×_ : ∀ {n m} → Set n → Set m → Set (n ⊔ m)
-X × Y = Σ (λ (x : X) → Y)
 
 -- Identity Types --
 --------------------
@@ -183,11 +196,23 @@ ap f p = ≡-induction (λ x → (refl ( f x))) (lhs p) (rhs p) p
 
 
 -- Homotopy between functions --
-_~_ : ∀ {n m} {X : Set n} {A : X → Set m}
+ℍ : (n m : Level) 
+    → (X : Set n)
+    → (A : X → Set m)
     → ((x : X) → A x) 
     → ((x : X) → A x)
     → Set (n ⊔ m)
-f ~ g = ∀ x → f x ≡ g x
+ℍ n m X A f g = ∀ x → f x ≡ g x
+
+-- Convenience function --
+_∼_ : ∀ {n m} {X : Set n} {A : X → Set m}
+    → ((x : X) → A x) 
+    → ((x : X) → A x)
+    → Set (n ⊔ m)
+f ∼ g = ∀ x → f x ≡ g x
+
+ℍ_Id_fun : ∀ {n} {X : Set n} → Id_fun ∼ Id_fun
+ℍ_Id_fun {n} {X} = λ (x : X) → refl x
 
 
 -- Contractibility --
@@ -209,4 +234,25 @@ is_set X = (x y : X) → (p q : x ≡ y) → p ≡ q
 
 is_equiv :  ∀ {n m} {X : Set n} {Y : Set m} 
             → (X → Y) → Set (n ⊔ m)
-is_equiv f = Σ g ∶ ((rng f) → (dom f)) , (((f ∘ g) ~ Id_fun) × ((g ∘ f) ~ Id_fun))
+is_equiv f = Σ g ∶ ((rng f) → (dom f)) , (((f ∘ g) ∼ Id_fun) × ((g ∘ f) ∼ Id_fun))
+
+Id_is_equiv : ∀ {n} {X : Set n} → is_equiv (Id_fun {n} {X})
+Id_is_equiv = (Id_fun , (ℍ_Id_fun , ℍ_Id_fun))
+
+_≃_ : ∀ {n m} → (X : Set n) → (Y : Set m) → Set (n ⊔ m)
+X ≃ Y = Σ f ∶ (X → Y) , (is_equiv f)
+
+self_eq : ∀ {n} → {X : Set n} → X ≃ X
+self_eq = (Id_fun , Id_is_equiv)
+
+idtoeqv : (n : Level) → (X : Set n) →  (Y : Set n) → X ≡ Y → X ≃ Y
+idtoeqv n X Y p = ≡-induction {lsuc n} {n} {Set n} {λ R S q → R ≃ S} (λ X → self_eq) X Y p 
+
+-- Universal properties --
+--------------------------
+
+×-univ  : ∀ {n} {X A B : Set n} 
+        → (X → A × B) → (X → A) × (X → B)
+×-univ {n} {X} {A} {B} f = ((λ x → ×pr₁ (f x)) , (λ x → ×pr₂ (f x)))
+
+
