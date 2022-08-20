@@ -235,6 +235,13 @@ self_eq = (Id_fun , Id_is_equiv)
 idtoeqv : (n : Level) → (X : Set n) →  (Y : Set n) → X ≡ Y → X ≃ Y
 idtoeqv n X Y p = ≡-induction {lsuc n} {n} {Set n} {λ R S q → R ≃ S} (λ X → self_eq) X Y p 
 
+-- Contractible fibers --
+
+fib : ∀ {n m} {X : Set n} {Y : Set m} 
+    → (f : X → Y) → (y : Y) → Set (n ⊔ m)
+fib {n} {m} {X} {Y} f y = Σ x ∶ X , (f(x) ≡ y)
+
+
 -- Universal properties --
 --------------------------
 
@@ -268,6 +275,11 @@ is_prop X = (x y : X) → x ≡ y
 is_contr : ∀ {n} → Set n → Set n
 is_contr X = Σ x ∶ X , ((y : X) → x ≡ y)
 
+-- Truncation --
 decidable : ∀ {n} → (A : Set n) → Set n
 decidable A = A + ¬ A
 
+-- Alternate equivalence definition
+is_equiv_fiber : ∀ {n m} {X : Set n} {Y : Set m} 
+            → (X → Y) → Set (n ⊔ m)
+is_equiv_fiber {n} {m} {X} {Y} f = (y : Y) → is_contr(fib f y)
