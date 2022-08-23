@@ -186,6 +186,9 @@ p ∙ q = ≡-concat  (level-of p)
 ap : ∀ {n m} {X : Set n} {Y : Set m}  → (f : X → Y) {x y : X} →  x ≡ y → (f x ≡ f y)
 ap f p = ≡-induction (λ x → (refl ( f x))) (lhs p) (rhs p) p
 
+apf : ∀ {n m} {X : Set n} {Y : Set m} {f g : X → Y} → (f ≡ g) → ((x y : X) → (x ≡ y) → (f x ≡ g y)) 
+apf {n} {m} {X} {Y} {f} {g} p = ≡-induction (λ (f : X → Y) → (λ x y q → (ap {n} {m} f {x} {y} q))) f g p
+
 -- Transport of paths --
 ≡-transport : (n m : Level) 
             → (X : Set n) 
@@ -283,3 +286,14 @@ decidable A = A + ¬ A
 is_equiv_fiber : ∀ {n m} {X : Set n} {Y : Set m} 
             → (X → Y) → Set (n ⊔ m)
 is_equiv_fiber {n} {m} {X} {Y} f = (y : Y) → is_contr(fib f y)
+
+
+-- Uniqueness principles --
+---------------------------
+
+-- Product types --
+×uniq   : ∀ {n}
+        → {A B : Set n}
+        → (x : A × B)
+        → x ≡ (×pr₁ x , ×pr₂ x)
+×uniq = ×-induction λ a b → refl (a , b) 
