@@ -62,6 +62,13 @@ data ℕ : 𝓤₀ where
   zero : ℕ
   succ : ℕ → ℕ
  
+-- Dependent functions type --
+------------------------------
+
+∏ : ∀ {n m} → (A : Set n) → (B : A → Set m) → Set (n ⊔ m)
+∏ A B = (a : A) → B a
+syntax ∏ A (λ a → b) = ∏ a ∶ A , b
+
 {-# BUILTIN NATURAL ℕ #-}
 
 ℕ-induction : ∀ {n} {A : ℕ → Set n} 
@@ -70,6 +77,15 @@ data ℕ : 𝓤₀ where
             → ((n : ℕ) →  A n)
 ℕ-induction a₀ f  zero      = a₀ 
 ℕ-induction a₀ f  (succ n)  = f n (ℕ-induction a₀ f n) 
+
+ℕ-rec : ∀ {n} {A : Set n}
+      → A
+      → (ℕ → A → A)
+      → (ℕ → A)
+ℕ-rec a₀ f n = ℕ-induction a₀ f n
+
+_+ₙ_ : ℕ → ℕ → ℕ
+n +ₙ m = ℕ-rec  (λ r → r) (λ r f → (λ s → succ (f s))) n m
 
 -- Coproducts ------
 --------------------
@@ -84,10 +100,27 @@ data _+_ {n m : Level} (X : Set n) (Y : Set m) : Set (n ⊔ m) where
 +-induction f g (inl x) = f x
 +-induction f g (inr y) = g y
 
+data 𝟚 : 𝓤₀ where
+  zero : 𝟚
+  one : 𝟚
+
+𝟚-induction : ∀ {n} {A : 𝟚 → Set n}
+  → (A zero)
+  → (A one)
+  → ((b : 𝟚) → A b)
+𝟚-induction a₀ a₁ zero = a₀
+𝟚-induction a₀ a₁ one = a₁
+
+𝟚-rec : ∀ {n} {U : Set n} → U → U → (𝟚 → U)
+𝟚-rec a₁ a₂ zero = a₁ 
+𝟚-rec a₁ a₂ one = a₂ 
+
 -- Products --
 --------------
 data _×_ {n m : Level} (X : Set n) (Y : Set m) : Set (n ⊔ m) where
     _,_ : (x : X) → (y : Y) → X × Y
+
+infixr 20 _×_
 
 ×-induction : ∀ {n m k} {X : Set n} {Y : Set m} {A : X × Y → Set k}
             → ((x : X) → (y : Y) → A (x , y))
@@ -121,6 +154,10 @@ pr₂ (x , y) = y
             → ((z : Σ Y) → A z)
 Σ-induction f (x , y) = f x y
 
+Σ-rec : ∀ {n m k} {X : Set n} {Y : X → Set m} {C : Set k}
+      → ((x : X) → Y x → C)
+      → (Σ Y → C)
+Σ-rec f (x , y) =  f x y
 -- Identity Types --
 --------------------
 
@@ -297,3 +334,18 @@ is_equiv_fiber {n} {m} {X} {Y} f = (y : Y) → is_contr(fib f y)
         → (x : A × B)
         → x ≡ (×pr₁ x , ×pr₂ x)
 ×uniq = ×-induction λ a b → refl (a , b) 
+
+
+-- Semi Ring --
+is_semi_ring : ∀ {n} → (A : Set n) → Set n
+is_semi_ring A =  Σ zero ∶ A ,
+                  Σ _+ₐ_ ∶ (A → A → A) , 
+                  Σ _∙ₐ_ ∶ (A → A → A) , 
+                  (is_set A) 
+                  × ((n : A) → (n +ₐ zero) ≡ n)
+                  × ((n : A) → (n ∙ₐ zero) ≡ zero)
+                  × ((n m : A) → (n +ₐ m) ≡ (m +ₐ n))
+                  × ((n m l : A) → ((n +ₐ m) +ₐ l) ≡ (n +ₐ (m +ₐ l)))
+                  × ((n m l : A) → ((n ∙ₐ m) ∙ₐ l) ≡ (n ∙ₐ (m ∙ₐ l)))
+                  × ((n : A) → Σ m ∶ A , ((n +ₐ m) ≡ zero))
+                  × ((n m l : A) → (n ∙ₐ (m +ₐ l)) ≡ ((n ∙ₐ m)  +ₐ (n ∙ₐ l)))
