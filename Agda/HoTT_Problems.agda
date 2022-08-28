@@ -171,10 +171,24 @@ lemma-add-comm : (n m : ℕ) → ((succ n) +ₙ m) ≡ (m +ₙ (succ n))
 lemma-add-comm n = ℕ-induction  ((zero-add-r (succ n)) ∙ ((zero-add-l (succ n)) ⁻¹))
                                 (λ m p → (ap succ (succ-comm n m)) ∙ (ap succ p))
 
-add_comm : ((n m : ℕ) → (n +ₙ m) ≡ (m +ₙ n))
-add_comm = ℕ-induction  (λ m → (zero-add-l m) ∙ ((zero-add-r m) ⁻¹))
+add-comm : ((n m : ℕ) → (n +ₙ m) ≡ (m +ₙ n))
+add-comm = ℕ-induction  (λ m → (zero-add-l m) ∙ ((zero-add-r m) ⁻¹))
                         (λ n p m → (lemma-add-comm n m))
 
+add-assoc : (n m l : ℕ) → ((n +ₙ m) +ₙ l) ≡ (n +ₙ (m +ₙ l))
+add-assoc = ℕ-induction (λ m l → refl (m +ₙ l))
+                        (λ n p m l → ap succ (p m l))
+
+
+succ≡n+1 :  (n : ℕ) → (succ n) ≡ (n +ₙ 1)
+succ≡n+1 = ℕ-induction  (refl 1)
+                        (λ n p → ap succ p)
+
+
+--mult-assoc : (n m l : ℕ) → ((n ∙ₙ m) ∙ₙ l) ≡ (n ∙ₙ (m ∙ₙ l))
+--mult-assoc = ℕ-induction (λ m l → refl 0)
+--                        (λ n p m l → ap succ (p m l))
+--
 -- is_semi_ring A =  Σ zero ∶ A ,
 --                    Σ _+ₐ_ ∶ (A → A → A) , 
 --                    Σ _∙ₐ_ ∶ (A → A → A) , 
@@ -184,5 +198,6 @@ add_comm = ℕ-induction  (λ m → (zero-add-l m) ∙ ((zero-add-r m) ⁻¹))
 --                    × ((n m : A) → (n +ₐ m) ≡ (m +ₐ n))
 --                    × ((n m l : A) → ((n +ₐ m) +ₐ l) ≡ (n +ₐ (m +ₐ l)))
 --                    × ((n m l : A) → ((n ∙ₐ m) ∙ₐ l) ≡ (n ∙ₐ (m ∙ₐ l)))
---                    × ((n : A) → Σ m ∶ A , ((n +ₐ m) ≡ zero))
+--                    × ((n : A) → (n ∙ₙ 1) ≡ n)
+--                    × ((n : A) → (1 ∙ₙ n) ≡ n)
 --                    × ((n m l : A) → (n ∙ₐ (m +ₐ l)) ≡ ((n ∙ₐ m)  +ₐ (n ∙ₐ l)))
