@@ -56,6 +56,9 @@ data 𝟙 : 𝓤₀ where
 ¬ : ∀ {n} → Set n → Set n
 ¬ A = A → 𝟘
 
+¬¬ : ∀ {n} → Set n → Set n
+¬¬ A = ¬ (¬ A)
+
 -- Natural Numbers --
 ---------------------
 data ℕ : 𝓤₀ where

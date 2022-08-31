@@ -49,3 +49,23 @@ prop₁₀ = ×-induction (λ a ¬a → ¬a a)
 
 prop₁₁ : {A B : Set} → (¬ (A → B)) → (¬ B)
 prop₁₁ = λ z b → z (λ a → b)
+
+prop₁₂ : {A B : Set} → (A → B) → (¬ B → ¬ A)
+prop₁₂ = λ f g a → g (f a) 
+
+prop₁₃ : {A : Set} → A → ¬¬ A
+prop₁₃ = λ a ¬a → ¬a a 
+
+prop₁₄ : {A B : Set} → (A + B) → ¬ ((¬ B) × (¬ A))
+prop₁₄ = +-induction  (λ a → ×-induction (λ ¬b ¬a → ¬a a))  
+                      (λ b → ×-induction (λ ¬b ¬a → ¬b b))  
+
+
+prop₁₅ : {A B : Set} → ((¬ A) + (¬ B)) → ¬ (A × B)
+prop₁₅ = +-induction  (λ ¬a → ×-induction (λ a b → ¬a a))
+                      (λ ¬b → ×-induction (λ a b → ¬b b))
+
+prop₁₆ : {A B : Set} → (¬ (A + B)) ↔ ((¬ A) × (¬ B))
+prop₁₆ =  ( (λ f → ((λ a → f (inl a)) , (λ b → f (inr b))))
+          ,
+          (×-induction (λ ¬a ¬b → +-induction (λ a → ¬a a) (λ b → ¬b b)  )))
