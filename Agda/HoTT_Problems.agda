@@ -185,9 +185,9 @@ succ≡n+1 = ℕ-induction  (refl 1)
                         (λ n p → ap succ p)
 
 
---mult-assoc : (n m l : ℕ) → ((n ∙ₙ m) ∙ₙ l) ≡ (n ∙ₙ (m ∙ₙ l))
---mult-assoc = ℕ-induction (λ m l → refl 0)
---                        (λ n p m l → ap succ (p m l))
+mult-assoc : (n m l : ℕ) → ((n ∙ₙ m) ∙ₙ l) ≡ (n ∙ₙ (m ∙ₙ l))
+mult-assoc = ℕ-induction (λ m l → refl 0)
+                        (λ n p m l → ap succ (p m l))
 --
 -- is_semi_ring A =  Σ zero ∶ A ,
 --                    Σ _+ₐ_ ∶ (A → A → A) , 

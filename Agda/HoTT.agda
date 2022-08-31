@@ -119,7 +119,7 @@ data 𝟚 : 𝓤₀ where
 --------------
 data _×_ {n m : Level} (X : Set n) (Y : Set m) : Set (n ⊔ m) where
     _,_ : (x : X) → (y : Y) → X × Y
-
+    
 infixr 20 _×_
 
 ×-induction : ∀ {n m k} {X : Set n} {Y : Set m} {A : X × Y → Set k}
