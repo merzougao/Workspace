@@ -38,10 +38,18 @@ rng {n} {m} {X} {Y} f = Y
 -----------------
 
 data 𝟘 : 𝓤₀ where
+⊥ : 𝓤₀
+⊥ = 𝟘
 
 𝟘-induction : ∀ {n} {A : 𝟘 → Set n}
             → ((x : 𝟘) → A x)
 𝟘-induction ()
+
+⊥-induction : ∀ {n} {A : 𝟘 → Set n}
+            → ((x : 𝟘) → A x)
+⊥-induction ()
+
+
 
 data 𝟙 : 𝓤₀ where
     ✭ : 𝟙

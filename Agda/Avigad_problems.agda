@@ -69,3 +69,18 @@ prop₁₆ : {A B : Set} → (¬ (A + B)) ↔ ((¬ A) × (¬ B))
 prop₁₆ =  ( (λ f → ((λ a → f (inl a)) , (λ b → f (inr b))))
           ,
           (×-induction (λ ¬a ¬b → +-induction (λ a → ¬a a) (λ b → ¬b b)  )))
+
+prop₁₇ : {A : Set} → ¬ A → (¬ (¬¬ A))
+prop₁₇ = λ f g → g f 
+
+--prop₁₈ : {A B: Set} → (A → ¬ B) ↔ (¬¬A → ¬ B)
+--prop₁₉ : {A B : Set} → ¬¬ (A + B) ↔ (¬ ((¬ A) × (¬ B)))
+--prop₂₀ : {A B : Set} → ¬¬ (A → B) → ((¬¬ A) → (¬¬ B))
+--prop₂₁ : {A B : Set} → ¬¬ (A × B) → ((¬¬ A) × (¬¬ B))
+--prop₂₂ : {A : Set} → ⊥ ↔ (A × (¬ A))
+--prop₂₃ : {A B : Set} → ¬ A → (A → B)
+--prop₂₄ : {A B : Set} → A + B → ((¬ A) → B)
+--prop₂₅ : {A B : Set} → ¬ (A → B) → (¬¬ A)
+--prop₂₆ : {A B : Set} → ¬¬ (A → B) ↔ ¬ ((¬¬ A) → (¬¬B))
+--prop₂₇ : {A : Set} → A + ⊥ ↔ A
+--prop₂₈ : {A : Set} → A × ⊥ ↔ ⊥
