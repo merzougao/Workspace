@@ -50,9 +50,11 @@ prop₁₀ = ×-induction (λ a ¬a → ¬a a)
 prop₁₁ : {A B : Set} → (¬ (A → B)) → (¬ B)
 prop₁₁ = λ z b → z (λ a → b)
 
+-- Contrapositive
 prop₁₂ : {A B : Set} → (A → B) → (¬ B → ¬ A)
 prop₁₂ = λ f g a → g (f a) 
 
+-- Double negation introduction
 prop₁₃ : {A : Set} → A → ¬¬ A
 prop₁₃ = λ a ¬a → ¬a a 
 
@@ -73,8 +75,17 @@ prop₁₆ =  ( (λ f → ((λ a → f (inl a)) , (λ b → f (inr b))))
 prop₁₇ : {A : Set} → ¬ A → (¬ (¬¬ A))
 prop₁₇ = λ f g → g f 
 
---prop₁₈ : {A B: Set} → (A → ¬ B) ↔ (¬¬A → ¬ B)
---prop₁₉ : {A B : Set} → ¬¬ (A + B) ↔ (¬ ((¬ A) × (¬ B)))
+prop₁₈ : {A B : Set} → (A → ¬ B) ↔ ((¬¬ A) → (¬ B))
+prop₁₈ = (  (λ f g b → g ((prop₁₂ f) (prop₁₃ b)))
+          , (λ f a b → (f (prop₁₃ a)) b)
+          )
+
+
+prop₁₉ : {A B : Set} → (¬¬ (A + B)) ↔ (¬ ((¬ A) × (¬ B)))
+prop₁₉ = (  (λ ¬¬a+b ¬a×¬b → ¬¬a+b (+-induction (λ a → (×pr₁ ¬a×¬b) a) (λ b → (×pr₂ ¬a×¬b) b)))  
+          , (λ f g → f ( (λ a → g (inl a)), (λ b → g (inr b)))))
+
+
 --prop₂₀ : {A B : Set} → ¬¬ (A → B) → ((¬¬ A) → (¬¬ B))
 --prop₂₁ : {A B : Set} → ¬¬ (A × B) → ((¬¬ A) × (¬¬ B))
 --prop₂₂ : {A : Set} → ⊥ ↔ (A × (¬ A))
