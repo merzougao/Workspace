@@ -152,3 +152,51 @@ data 𝟚 : 𝓤₀ where
         → P 
         → (z : 𝟚) → P
 𝟚-rec {P = P} = 𝟚-ind {P = λ z → P}
+
+-- Natural Numbers --
+---------------------
+
+data ℕ : 𝓤₀ where
+    0ₙ      : ℕ
+    succ    : ℕ → ℕ
+
+ℕ-ind : ∀ {n} {P : ℕ → Set n}
+        → P 0ₙ
+        → ((n : ℕ) →  P n → P (succ n))
+        → (n : ℕ) → P n
+ℕ-ind p₀ pₙ 0ₙ = p₀ 
+ℕ-ind p₀ pₙ (succ n) = pₙ n (ℕ-ind p₀ pₙ n)
+
+ℕ-rec : ∀ {n} {P : Set n}
+        → P 
+        → ((n : ℕ) →  P → P )
+        → (n : ℕ) → P
+ℕ-rec {P = P} = ℕ-ind {P = λ z → P} 
+
+
+-- Identity types --
+--------------------
+
+data _≡_ {n : Level } {A : Set n} : A → A → Set n where
+    refl : (a : A) → a ≡ a
+
+≡-ind : ∀ {n m} {A : Set n} {P : (a b : A) → (a ≡ b) → Set m}
+        → ((a : A) → P a a (refl a))
+        → ((a b : A) → (p : a ≡ b) → P a b p)
+≡-ind f a a (refl a) = f a
+
+-- Helpers --
+src : ∀ {n} {A : Set n} {a b : A} →  a ≡ b → A
+src {a = a} p = a
+
+dst : ∀ {n} {A : Set n} {a b : A} →  a ≡ b → A
+dst {b = b} p = b
+
+-- Negation and disequality --
+------------------------------
+
+¬ : ∀ {n} (A : Set n) → Set n
+¬ A = A → 𝟘
+
+_≢_ : ∀ {n} {A : Set n} → (a b : A) → Set n 
+a ≢ b = ¬ (a ≡ b)
