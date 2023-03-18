@@ -44,8 +44,7 @@ Lemma2-1-4-iii {p = p} = ≡-ind {P = λ a b p → (p ⁻¹) ⁻¹ ≡ p} (λ c 
 Lemma2-1-4-iv : (p : a ≡ b) 
                 → (c d : A) → (q : b ≡ c) → (r : c ≡ d) 
                 → p • (q • r) ≡ (p • q) • r
-Lemma2-1-4-iv {a} {b} p = ≡-ind {P = P} (λ z c d q r → (refl(q • r))) a b p where
-    P : (x y : A) → (p : x ≡ y) → Set (level-of x)
-    P x y p  = (c d : (type-of x)) → (q : y ≡ c) → (r : c ≡ d) → p • (q • r) ≡ (p • q) • r
+Lemma2-1-4-iv {A = A} {a} {b} p = ≡-ind {P = P} (λ z c d q r → (refl (q • r))) a b p where
+    P = λ a b p → (c d : A) → (q : b ≡ c) → (r : c ≡ d) → p • (q • r) ≡ (p • q) • r
 
 
