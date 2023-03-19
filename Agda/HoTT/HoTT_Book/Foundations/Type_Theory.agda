@@ -21,8 +21,8 @@ _∘_ :   ∀ {n m k} {X : Set n} {Y : Set m} {Z : Set k}
         → (Y → Z) → (X → Y) → (X → Z)
 g ∘ f = λ x → g ( f x)
 
-Id_fun : ∀ {n} {X : Set n} → X → X
-Id_fun x = x
+id : ∀ {n} {X : Set n} → X → X
+id x = x
 
 dom :   ∀ {n m} {X : Set n} {Y : Set m}
         → (X → Y) → Set n

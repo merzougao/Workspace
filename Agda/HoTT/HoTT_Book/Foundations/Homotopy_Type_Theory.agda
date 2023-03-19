@@ -8,7 +8,7 @@ open import Foundations.Type_Theory
 
 variable
     n : Level
-    A B : Set n
+    A B C : Set n
     a b c d : A
 
 ≡-reflexivity : a ≡ b → b ≡ a
@@ -66,7 +66,26 @@ Lemma2-1-4-iv {A = A} {a} {b} p = ≡-ind {P = P} (λ z c d q r → (refl (q •
 variable
     f : A → B
     x y : A
+    r : x ≡ y
 
-ap : x ≡ y → (f x) ≡ (f y)
-ap {f = f} p = ≡-ind {P = λ x y p → f x ≡ f y} (λ z → refl (f z)) (src p) (dst p) p
+ap : (f : A → B) → x ≡ y → (f x) ≡ (f y)
+ap f p = ≡-ind {P = λ x y p → f x ≡ f y} (λ z → refl (f z)) (src p) (dst p) p
+
+
+lemma2-2-2-i : (z : A) → (q : y ≡ z) → (ap f (r • q)) ≡ ((ap f r) • (ap f q))
+
+lemma2-2-2-i {A = A} {f = f} {r = r} = ≡-ind {P = λ x y r → (z : A) → (q : y ≡ z) → (ap f (r • q)) ≡ ((ap f r) • (ap f q))}
+                                (λ c z q → (refl (ap f q))) (src r) (dst r) r 
+
+lemma2-2-2-ii : ap f (r ⁻¹) ≡ (ap f r) ⁻¹
+lemma2-2-2-ii {f = f} {r = r} = ≡-ind   {P = λ x y r → (ap f (r ⁻¹)) ≡ (ap f r) ⁻¹}
+                                (λ c → refl (refl (f c))) (src r) (dst r) r
+
+lemma2-2-2-iii : (g : B → C) → ap g (ap f r) ≡ ap (g ∘ f) r
+lemma2-2-2-iii {f = f} {r = r} g = ≡-ind  {P = λ x y r → ap g (ap f r) ≡ ap (g ∘ f) r}
+                                                (λ c → refl (refl (g (f c)))) (src r) (dst r) r
+
+lemma2-2-2-iv : (ap id r) ≡ r
+lemma2-2-2-iv {r = r} = ≡-ind   {P = λ x y r → (ap id r) ≡ r}
+                        (λ c → refl (refl c)) (src r) (dst r) r
 
