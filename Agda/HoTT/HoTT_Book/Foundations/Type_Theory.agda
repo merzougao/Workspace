@@ -45,15 +45,15 @@ syntax ∏ A (λ a → b) = ∏ a ∶ A , b
 -------------------
 
 data _×_ {n m : Level} (X : Set n) (Y : Set m) : Set (n ⊔ m) where
-    _,_ : X → Y → X × Y
+    _,,_ : X → Y → X × Y
 
 infixr 20 _×_
 
 -- Induction Principle --
 ×-ind : ∀ {n m k} {A : Set n} {B : Set m} {P : A × B → Set k}
-        → ((a : A) → (b : B) → P (a , b))
+        → ((a : A) → (b : B) → P (a ,, b))
         → ((z : A × B) →  P z)
-×-ind f (a , b) = f a b
+×-ind f (a ,, b) = f a b
 
 -- Recursion Principle --
 ×-rec : ∀ {n m k} {A : Set n} {B : Set m} {P : Set k}
@@ -72,6 +72,7 @@ data 𝟙 : 𝓤₀ where
         → P
         → ((z : 𝟙) → P)
 𝟙-rec {n} {P} = 𝟙-ind{n} {λ z → P}
+
 
 -- Projections --
 ×p₁ : ∀ {n m} {A : Set n} {B : Set m} → A × B → A
