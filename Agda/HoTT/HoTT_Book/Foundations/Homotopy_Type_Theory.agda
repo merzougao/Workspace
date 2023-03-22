@@ -7,7 +7,7 @@ open import Foundations.Type_Theory
 --------------------------------
 
 variable
-    n : Level
+    n m : Level
     A B C : Set n
     a b c d : A
 
@@ -31,10 +31,13 @@ infix 25 _•_
 
 
 variable 
-    p : a ≡ a
+    p : a ≡ b
 
-Lemma-2-1-4-i : p • (refl a) ≡ p
-Lemma-2-1-4-i {p = p} = ≡-ind {P = λ b c p → (p • (refl c) ≡ p)} (λ c →  (refl (refl c))) (src p) (src p) p
+Lemma-2-1-4-i : p • (refl b) ≡ p
+Lemma-2-1-4-i {p = p} = ≡-ind {P = λ a b p → p • (refl b) ≡ p} (λ c →  (refl (refl c))) (src p) (dst p) p
+
+Lemma-2-1-4-i' : (refl a) • p ≡ p
+Lemma-2-1-4-i' {p = p} = ≡-ind {P = λ a b p → (refl a) • p ≡ p} (λ c →  (refl (refl c))) (src p) (dst p) p
 
 Lemma-2-1-4-ii : (p ⁻¹ • p) ≡ (refl a)
 Lemma-2-1-4-ii {p = p} = ≡-ind {P = λ a b p → (p ⁻¹ • p) ≡ (refl b)} (λ c → (refl (refl c))) (src p) (dst p) p
@@ -131,3 +134,29 @@ lemma-2-3-10 f Q p = ≡-ind    {P = λ x y p → (u : Q (f x)) → Tr (Q ∘ f)
 lemma-2-3-11 : (Q R : A → Set n) → (f : ((x : A) → Q x → R x)) → (p : x ≡ y) → (u : Q x) → Tr R p (f x u) ≡ f y (Tr Q p u)
 lemma-2-3-11 Q R f p = ≡-ind    {P = λ x y p → (u : Q x) → Tr R p (f x u) ≡ f y (Tr Q p u)}
                                 (λ z u → refl (f z u)) (src p) (dst p) p
+
+
+-- Homotopies and Equivalences --
+---------------------------------
+
+_~_ : ∀ {n m} {A : Set n} {B : Set m} → (f g : A → B) → Set (n ⊔ m)
+f ~ g = (x : dom f) → f x ≡ g x
+
+variable
+    Q : A → Set m
+    g h k : (x : A) → Q x
+
+Lemma-2-4-2-i : g ~ g
+Lemma-2-4-2-i {g = g} = λ x → refl (g x)
+
+Lemma-2-4-2-ii : h ~ g → g ~ h
+Lemma-2-4-2-ii H = λ x → (H x) ⁻¹
+
+Lemma-2-4-2-iii : h ~ g → g ~ k → h ~ k
+Lemma-2-4-2-iii H G = λ x → (H x) • (G x)
+
+Lemma-2-4-3 : (H : f ~ g) → (p : x ≡ y) → (H x) • (ap g p) ≡ (ap f p) • (H y)
+Lemma-2-4-3 {f = f} {g = g} H p = ≡-ind {P = λ x y p → (H x) • (ap g p) ≡ (ap f p) • (H y)} 
+                                        (λ z → (Lemma-2-1-4-i {p = H z}) • ((Lemma-2-1-4-i' {p = H z}) ⁻¹))
+                                        (src p) (dst p) p
+
