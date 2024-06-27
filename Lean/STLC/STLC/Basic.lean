@@ -45,8 +45,46 @@ structure ctx_elem where
   var : ℕ
   typ : Typ
 
+-- Carefull, this is "\ :" not just ":"
+notation:max a"∶"T => ctx_elem.mk a T
+
 def Ctx : Type := List ctx_elem
+
+
+
+-- instance : Membership ctx_elem Ctx where
+--   mem := by
+--     intro c Γ
+--     cases Γ
+--     case nil => exact False
+--     case cons h Γ₀ => exact h.var = c.var ∨ Membership.mem c Γ₀
+
+
+-- TODO type class instance of membership --
+def InCtx : ctx_elem → Ctx → Prop := by
+  intro c Γ
+  cases Γ
+  case nil => exact False
+  case cons c₀ Γ₀ => exact c₀.var = c.var ∨ InCtx c Γ₀
+notation:max c"∈"Γ => InCtx c Γ
+notation:max c"∉"Γ => ¬ InCtx c Γ
+
+-- TODO type class instance of subsets --
+def IsSubset : Ctx → Ctx → Prop := by
+  intro Γ Δ
+  cases Γ
+  case nil => exact True
+  case cons c₀ Γ₀ => exact (c₀ ∈ Δ) ∧ IsSubset Γ₀ Δ
+notation:max Γ"⊆"Δ => IsSubset Γ Δ
 
 inductive Typing : Ctx → Term → Typ → Type
   | var : Typing (c :: Γ) (Term.var c.var) c.typ
-  | weak : Typing Γ t T → c ∉ Γ → Typing (c :: Γ) t T
+  | ex : Typing (Γ ++ t₀ :: t₁ :: Δ) t T → Typing (Γ ++ t₁ :: t₀ :: Δ) t T
+  | abs : Typing ((x∶A) :: Γ) t B → Typing Γ (λ[x].t) (A->B)
+  | app : Typing Γ t₀ (A->B) → Typing Γ t₁ A → Typing Γ t₀{t₁} B
+
+notation:max Γ "⊢" t "∶∶" A => Typing Γ t A
+
+-- Weakening is admissible
+def Weakening : (Γ ⊢ t ∶∶ A) → (Γ ⊆ Δ) → (Δ ⊢ t ∶∶ A) := by
+  sorry
