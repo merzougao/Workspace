@@ -48,32 +48,52 @@ structure ctx_elem where
 -- Carefull, this is "\ :" not just ":"
 notation:max a"∶"T => ctx_elem.mk a T
 
-def Ctx : Type := List ctx_elem
+notation "Ctx" => List ctx_elem
 
 
+-- TODO Fix this
+-- instance : Membership ℕ Ctx where
+--   mem := by
+--     intro c Γ
+--     cases Γ
+--     case nil => exact False
+--     case cons h Γ₀ => exact h.var = c ∨ Membership.mem c Γ₀
 
-instance : Membership ctx_elem Ctx where
-  mem := by
-    intro c Γ
-    cases Γ
-    case nil => exact False
-    case cons h Γ₀ => exact h.var = c.var ∨ Membership.mem c Γ₀
+inductive NatInCtx : ℕ → Ctx → Prop
+  | init : NatInCtx n ((n∶T) :: Γ)
+  | cons : n ≠ c.var → NatInCtx n Γ → NatInCtx n (c :: Γ)
 
-instance : HasSubset Ctx where
-  Subset := by
-    intro Γ Δ
-    cases Γ
-    case nil => exact True
-    case cons c₀ Γ₀ => exact (c₀ ∈ Δ) ∧ HasSubset.Subset Γ₀ Δ
+notation n"∈₁"Γ => NatInCtx n Γ
+notation n"∉₁"Γ => ¬ NatInCtx n Γ
+
+-- instance : HasSubset Ctx where
+--   Subset := by
+--     intro Γ Δ
+--     cases Γ
+--     case nil => exact True
+--     case cons c₀ Γ₀ => exact (c₀ ∈ Δ) ∧ HasSubset.Subset Γ₀ Δ
+inductive Valid : Ctx → Prop
+  | nil : Valid []
+  | cons : (c.var ∉₁ Γ) → Valid Γ → Valid (c :: Γ)
 
 inductive Typing : Ctx → Term → Typ → Type
-  | var : c ∉ Γ → Typing (c :: Γ) (Term.var c.var) c.typ
+  | var : Valid (c :: Γ) → Typing (c :: Γ) (Term.var c.var) c.typ
   | ex : Typing (Γ ++ t₀ :: t₁ :: Δ) t T → Typing (Γ ++ t₁ :: t₀ :: Δ) t T
   | abs : Typing ((x∶A) :: Γ) t B → Typing Γ (λ[x].t) (A->B)
   | app : Typing Γ t₀ (A->B) → Typing Γ t₁ A → Typing Γ t₀{t₁} B
 
 notation:max Γ "⊢" t "∶∶" A => Typing Γ t A
 
+
 -- Weakening is admissible
-def Weakening : (Γ ⊢ t ∶∶ A) → (Γ ⊆ Δ) → (Δ ⊢ t ∶∶ A) := by
-  sorry
+def Weakening : (Γ ⊢ t ∶∶ A) → (Δ : Ctx) → (Γ ⊆ Δ) → (Δ ⊢ t ∶∶ A) := by
+  intro d
+  induction d
+  case var c₀ Γ₀ p₀ =>
+    intro Δ d₀
+    induction Δ
+    case nil => sorry --contradiction
+    case cons h₀ Δ₀ iH =>
+      cases d₀
+      case intro l r =>
+        have : c₀ = h₀ ∨ c₀ ∈ Δ₀ := @InCtx c₀ Δ₀
