@@ -1,5 +1,6 @@
 import Mathlib.Init.Data.List.Basic
 
+
 open List
 
 inductive Typ : Type
