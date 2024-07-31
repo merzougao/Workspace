@@ -4,70 +4,115 @@ import Mathlib.Init.Data.List.Basic
 inductive Typ : Type
   | base : Typ
   | leftarrow : Typ → Typ → Typ
+  | rightarrow : Typ → Typ → Typ
 open Typ
 
+notation A"⇐"B => leftarrow A B
+notation A"⇒"B => leftarrow A B
+
+mutual
 inductive Term : Type
   | var : ℕ → Term
-  | abs : ℕ → Term → Term
-  | app : Term → Term → Term
-  | leftarrow : Term → TreeTerm → Term
+  | absL : Term → Term → Term
+  | absR : Term → Term → Term
+  | app : TreeTerm → TreeTerm → Term
 
+inductive TreeTerm : Type
+  | hole : ℕ → TreeTerm
+  | leaf : Term → TreeTerm
+  | cons : TreeTerm → TreeTerm → TreeTerm
+  | app : TreeTerm → TreeTerm → TreeTerm
+end
+
+open TreeTerm
 open Term
 
-def subst : ℕ → Term → Term → Term := by
-  intro n u t
-  cases t
-  case var m => exact if n = m then u else Term.var m
-  case abs x p => exact if n = x then (abs x p) else (abs x (subst n u p))
-  case app t₀ t₁ => exact app (subst n u t₀) (subst n u t₁)
+notation t"{"q"}" => Term.app t q
 
-notation:max t"["u"//"x"]" => subst x u t
+instance : OfNat Term n where
+  ofNat := Term.var n
 
 -- Need this for dependencies between trees --
 inductive TreeTyp : Type
   | hole : TreeTyp
   | leaf : Typ → TreeTyp
   | cons : TreeTyp → TreeTyp → TreeTyp
+  | app : TreeTyp → TreeTyp → TreeTyp
 
 open TreeTyp
 
-inductive TreeTerm : Type
-  | nil : TreeTerm
-  | hole : TreeTerm
-  | leaf : Term → TreeTerm
-  | cons : TreeTerm → TreeTerm → TreeTerm
-open TreeTerm
 
-inductive βRed : TreeTerm → TreeTerm → Type
-  | id_left : βRed (cons nil t) t
-  | id_right : βRed (cons t nil) t
 
-inductive βClosure : TreeTerm → TreeTerm → Type
-  | init : βRed t q → βClosure t q
-  | rfl : βClosure t t
-  | trans : βClosure t₁ t₂ → βClosure t₂ t₃ → βClosure t₁ t₃
+instance : OfNat TreeTerm n where
+  ofNat := TreeTerm.leaf (Term.var n)
 
---\ t--
-notation t"▸"q => βClosure t q
+class OfTyp (α : Type u) (T : Typ) where
+  ofTyp : α
 
-def TreeTermSub : TreeTerm → TreeTerm → TreeTerm := by
-  intro Γ Δ
-  cases Γ
-  case nil => exact nil
-  case hole => exact Δ
-  case leaf t => exact leaf t
-  case cons Γ₁ Γ₂ => exact cons (TreeTermSub Γ₁ Δ) (TreeTermSub Γ₂ Δ)
+instance : OfTyp TreeTyp T where
+  ofTyp := TreeTyp.leaf T
 
-def TreeTypSub : TreeTyp → TreeTyp → TreeTyp := by
-  intro T Q
-  cases T
-  case hole => exact Q
-  case leaf t => exact leaf t
-  case cons T₁ T₂ => exact cons (TreeTypSub T₁ Q) (TreeTypSub T₂ Q)
 
-inductive TreeDeduction : TreeTerm → TreeTerm → TreeTyp → Type
-  | hole : TreeDeduction hole hole hole
-  | leaf : (t : Term) → (T : Typ) → TreeDeduction nil (leaf t) (leaf T)
-  | cons : (t = nil ∨ q = nil) → TreeDeduction  t t₁ T₁ → TreeDeduction  q q₁ Q₁ → TreeDeduction (cons t q) (cons t₁ q₁) (cons T₁ Q₁)
 
-notation Γ "⊩" t":"T => TreeDeduction Γ t T
+-- class OfNat (α : Type u) (_ : Nat) where
+--   /-- The `OfNat.ofNat` function is automatically inserted by the parser when
+--   the user writes a numeric literal like `1 : α`. Implementations of this
+--   typeclass can therefore customize the behavior of `n : α` based on `n` and
+--   `α`. -/
+--   ofNat : α
+
+notation "□"n => TreeTerm.hole n
+notation "["a"]" => TreeTerm.leaf a
+notation "("t","q")" => TreeTerm.cons t q
+notation t"{"q"}" => TreeTerm.app t q
+
+notation "□" => TreeTyp.hole
+notation "["a"]" => TreeTyp.leaf a
+notation "("t","q")" => TreeTyp.cons t q
+notation t"{"q"}" => TreeTyp.app t q
+
+inductive TreeDeduction : TreeTerm → TreeTyp → Type
+  | hole : TreeDeduction (□ n) □
+  | leaf : TreeDeduction [t] [T]
+  | cons : TreeDeduction t₁ T₁ → TreeDeduction t₂ T₂ → TreeDeduction (t₁, t₂) (T₁,T₂)
+  | appR : TreeDeduction (t, (□ n)) (T, □) → TreeDeduction q Q → TreeDeduction (t{q}) (T, Q)
+  | appL : TreeDeduction ((□ n),t) (□ , T) → TreeDeduction q Q → TreeDeduction (t{q}) (Q , T)
+open TreeDeduction
+
+notation "⊩"q ":"Q => TreeDeduction q Q
+
+variable {N S : Typ}
+abbrev S₁ := ([N],([(N ⇐ S) ⇒ N] , [N]))
+
+def ex₁ : ⊩ (0, 1) : ([N] , [N]) := by
+  apply TreeDeduction.cons
+  <;> apply TreeDeduction.leaf
+
+
+def ex₂ : (t : TreeTerm) × ⊩ t : ([N],([(N ⇐ S) ⇒ N] , [N])) := by
+  constructor
+  case fst => exact [0]{[1]{[2]}}
+  case snd =>
+    apply appR
+    case n => exact 0
+    case a => apply TreeDeduction.cons ; apply TreeDeduction.leaf ; apply TreeDeduction.hole
+    case a =>
+      apply appL
+      case n => exact 1
+      case a => apply TreeDeduction.cons ; apply TreeDeduction.hole ;apply TreeDeduction.leaf
+      case a => apply TreeDeduction.leaf
+
+inductive Deduction : TreeTerm → TreeTyp → Term → Typ → Type
+  | LeftIntro : Deduction ([t] , l) ([T], Λ) a A → Deduction l Λ (absL t a) (T ⇐ A)
+  | RightIntro : Deduction (l, [t]) (Λ, [T]) a A → Deduction l Λ (absR a t) (A ⇒ T)
+  | LeftElim : Deduction ([a] , [f]) ([A] , [A ⇐ B]) ([f]{[a]}) B
+  | RightElim : Deduction ([f] , [a]) ([A ⇒ B] , [B]) ([f]{[a]}) A
+  | cut : Deduction δ Δ a A → Deduction (γ{[a]}) (Γ{[A]}) b B → Deduction (γ{δ}) (Γ{Δ}) ([b]{γ{[a]{δ}}}) B
+
+open Deduction
+
+notation γ "∶" Γ "⊢" t ":" T => Deduction γ Γ t T
+
+def ex₃ : (γ : TreeTerm) × (t : Term) × (γ ∶ ([N],([(N ⇐ S) ⇒ N] , [N])) ⊢ t : S) := by
+  constructor
+  sorry
